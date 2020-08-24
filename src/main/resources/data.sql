@@ -1,4 +1,4 @@
-INSERT INTO employee (code, name, email, password, profession, city, branch, role)
+REPLACE INTO employee (code, name, email, password, profession, city, branch, role)
 VALUES
 (1,'PeterM','peter@email.com', 'ABC123abc*','Software Engineer', 'Dublin' , 'IT' , 0),
 (2,'Bia','bia@email.com', '12345','Software Engineer', 'Dublin' , 'IT' , 0),
