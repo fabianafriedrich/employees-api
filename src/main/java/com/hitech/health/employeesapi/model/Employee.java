@@ -2,10 +2,7 @@ package com.hitech.health.employeesapi.model;
 
 import com.hitech.health.employeesapi.enums.Roles;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -29,6 +26,9 @@ public class Employee implements Serializable {
     private String branch;
 
     private Roles role;
+
+    @Transient
+    private String token;
 
     /*Default Constructor*/
     public Employee() {
@@ -111,6 +111,14 @@ public class Employee implements Serializable {
 
     public void setRole(Roles role) {
         this.role = role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

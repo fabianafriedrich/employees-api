@@ -1,13 +1,14 @@
 package com.hitech.health.employeesapi.resource;
 
 import com.hitech.health.employeesapi.enums.Roles;
+import com.hitech.health.employeesapi.jwt.JwtTokenProvider;
 import com.hitech.health.employeesapi.model.Employee;
 import com.hitech.health.employeesapi.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
@@ -23,13 +24,18 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
+
+    @CrossOrigin(origins = "http://localhost:4200")
     /*HTTP Get method to list employees*/
     @GetMapping
     public List<Employee> getAll(){
         return employeeService.listAll();
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     /*HTTP Get method to find employee by code*/
     @GetMapping(value = "/{code}")
     public ResponseEntity<Employee> findById(@PathVariable Long code){
@@ -37,6 +43,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     /*HTTP Put method to update employee*/
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody @Valid Employee employee) {
@@ -47,6 +54,7 @@ public class EmployeeController {
         return new ResponseEntity<Employee>(employee, HttpStatus.CREATED);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     /*HTTP Delete method to remove employee by code*/
     @DeleteMapping (value = "/{code}")
     public ResponseEntity delete(@PathVariable Long code){
@@ -54,6 +62,7 @@ public class EmployeeController {
         return new ResponseEntity<Employee>(HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody Employee employee){
         Employee employeeDB = employeeService.findByEmail(employee.getEmail());
@@ -61,7 +70,7 @@ public class EmployeeController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         employee.setRole(Roles.USER);
-//        employee.setPassword(new BCryptPasswordEncoder().encode(employee.getPassword()));
+        employee.setPassword(new BCryptPasswordEncoder().encode(employee.getPassword()));
         try {
             return new ResponseEntity<>(employeeService.save(employee), HttpStatus.CREATED);
         }catch (Exception e){
@@ -70,20 +79,20 @@ public class EmployeeController {
         return null;
     }
 
-    /*Principal class is the current logged in user*/
-//    @GetMapping("/login")
-//    public ResponseEntity<?> getEmployee(Principal principal){
-//        if(principal == null){
-//            //logout will also use here so we should return ok http status.
-//            return ResponseEntity.ok(principal);
-//        }
-////        UsernamePasswordAuthenticationToken authenticationToken =
-////                (UsernamePasswordAuthenticationToken) principal;
-//
-//        Employee employee = employeeService.findByEmail(authenticationToken.getName());
-////        employee.setToken(tokenProvider.generateToken(authenticationToken));
-//
-//        return new ResponseEntity<>(employee, HttpStatus.OK);
-//    }
+    /*Principal class is the current employee logged in */
+    @GetMapping("/login")
+    public ResponseEntity<?> getEmployee(Principal principal){
+        if(principal == null){
+            //logout will also use here so we should return ok http status.
+            return ResponseEntity.ok(principal);
+        }
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) principal;
+
+        Employee employee = employeeService.findByEmail(authenticationToken.getName());
+        employee.setToken(tokenProvider.generateToken(authenticationToken));
+
+        return new ResponseEntity<>(employee, HttpStatus.OK);
+    }
 
 }
