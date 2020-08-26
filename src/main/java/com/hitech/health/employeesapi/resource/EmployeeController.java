@@ -28,14 +28,12 @@ public class EmployeeController {
     private JwtTokenProvider tokenProvider;
 
 
-    @CrossOrigin(origins = "http://localhost:4200")
     /*HTTP Get method to list employees*/
     @GetMapping
     public List<Employee> getAll(){
         return employeeService.listAll();
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     /*HTTP Get method to find employee by code*/
     @GetMapping(value = "/{code}")
     public ResponseEntity<Employee> findById(@PathVariable Long code){
@@ -43,7 +41,6 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     /*HTTP Put method to update employee*/
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody @Valid Employee employee) {
@@ -54,7 +51,6 @@ public class EmployeeController {
         return new ResponseEntity<Employee>(employee, HttpStatus.CREATED);
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     /*HTTP Delete method to remove employee by code*/
     @DeleteMapping (value = "/{code}")
     public ResponseEntity delete(@PathVariable Long code){
@@ -62,7 +58,6 @@ public class EmployeeController {
         return new ResponseEntity<Employee>(HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody Employee employee){
         Employee employeeDB = employeeService.findByEmail(employee.getEmail());
