@@ -25,10 +25,10 @@ Install MySQL DB (https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/)<
 Create in your local MYSQL the database name: **hitech_health_db**<br/>
 update the property _spring.datasource.password=_ in application.properties file with your local MYSQL password.<br/>
 
-_**Start Back-end**_
+_**Start Back-end**_<br/>
 cd employees-api<br/>
 mvn clean install<br/>
 java -jar target/*.jar<br/>
 
-_**Run unit tests Back-end (development)**_
+_**Run unit tests Back-end (development)**_<br/>
 mvn test
